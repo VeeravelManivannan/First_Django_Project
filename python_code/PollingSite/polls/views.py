@@ -23,7 +23,9 @@ def details(request,question_id):
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
     print("Moving after exception")
-    return render(request,'polls/question_detail.html', {'question' : question})
+    #context is the one which connects 'question' in view to the 'question' in template
+    context = {'question' : question}
+    return render(request,'polls/question_detail.html', context)
 
 def results(request,question_id):
     return HttpResponse("(Under implementation)You are now looking at the results of the question no :  %s" % question_id)
