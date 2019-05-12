@@ -12,9 +12,12 @@ def index(request):
     #return HttpResponse(output)
 
     question_list = Question.objects.order_by('pub_date')
-    output = ', '.join(q.question_text for q in question_list)
-    print("The value for output is %s" %output)
-    return HttpResponse(output)
+    #if there is no  template then use this rendering logic , where everything is defined in the code
+    #output = ', '.join(q.question_text for q in question_list)
+    #print("The value for output is %s" %output)
+    #return HttpResponse(output)
+    context = {'latest_question_list' : question_list}
+    return render(request,'polls/index.html',context)
 
 def details(request,question_id):
     #return HttpResponse("(Under Implementation)Hello thanks for asking about a question ,this is the question id you asked for %s" % question_id)
