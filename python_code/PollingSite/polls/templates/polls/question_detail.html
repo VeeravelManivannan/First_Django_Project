@@ -1,6 +1,8 @@
 <h1>{{ question.question_text }}</h1>
-<ul>
+<form>
 {% for choice in question.choice_set.all %}
-    <li>{{ choice.choice_text }}</li>
+<input type="radio" name="choice" id="{{ forloop.counter }}" value="{{ choice.choice_id }}">
+<label for="{{ forloop.counter }}"> {{ choice.choice_text }} </label><br>
+<br>
 {% endfor %}
-</ul>
+</form>
