@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import Http404
 from .models import Question
+from django.shortcuts import get_object_or_404, render
 
 def index(request):
     #Next 3 lines , original code from the tutorial
@@ -34,4 +35,7 @@ def results(request,question_id):
     return HttpResponse("(Under implementation)You are now looking at the results of the question no :  %s" % question_id)
 
 def vote(request,question_id):
-    return HttpResponse("(Under implementation ) You are looking at the no of votes for the question no :  %s" % question_id)
+    #return HttpResponse("(Under implementation ) You are looking at the no of votes for the question no :  %s" % question_id)
+    question=get_object_or_404(Question , pk=question_id)
+    choice=question.choice_set.get(pk=request.POST['choice'])
+    return HttpResponse(choice.choice_text)
