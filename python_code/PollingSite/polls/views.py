@@ -2,9 +2,12 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.http import Http404
 from .models import Question
 from django.shortcuts import get_object_or_404, render
+from django.utils.html import escape
+from django.urls import reverse
 
 def index(request):
     #Next 3 lines , original code from the tutorial
@@ -32,10 +35,18 @@ def details(request,question_id):
     return render(request,'polls/question_detail.html', context)
 
 def results(request,question_id):
-    return HttpResponse("(Under implementation)You are now looking at the results of the question no :  %s" % question_id)
+    question=Question.objects.get(pk=question_id)
+    return HttpResponse("The question text is   %s" % question.question_text)
 
 def vote(request,question_id):
     #return HttpResponse("(Under implementation ) You are looking at the no of votes for the question no :  %s" % question_id)
     question=get_object_or_404(Question , pk=question_id)
-    choice=question.choice_set.get(pk=request.POST['choice'])
-    return HttpResponse(choice.choice_text)
+    print(request.POST)
+    
+    #Now we got a reference to the choice object
+    choice = question.choice_set.get(pk=request.POST.get('choice'))
+    choice.votes = choice.votes + 1 
+    choice.save()
+
+    #Now comes the redirection logic
+    return HttpResponseRedirect(reverse('results', args=[question.id]))
