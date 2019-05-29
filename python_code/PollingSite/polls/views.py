@@ -29,14 +29,15 @@ def details(request,question_id):
         question = Question.objects.get(pk=question_id)
     except Question.DoesNotExist:
         raise Http404("Question does not exist")
-    print("Moving after exception")
+    #print("Moving after exception")
     #context is the one which connects 'question' in view to the 'question' in template
     context = {'question' : question}
     return render(request,'polls/question_detail.html', context)
 
 def results(request,question_id):
-    question=Question.objects.get(pk=question_id)
-    return HttpResponse("The question text is   %s" % question.question_text)
+    question=get_object_or_404(Question , pk=question_id)
+    context = { 'question' : question }
+    return render(request , 'polls/result.html', context)
 
 def vote(request,question_id):
     #return HttpResponse("(Under implementation ) You are looking at the no of votes for the question no :  %s" % question_id)
