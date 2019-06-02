@@ -8,21 +8,23 @@ from .models import Question
 from django.shortcuts import get_object_or_404, render
 from django.utils.html import escape
 from django.urls import reverse
+from django.views import generic
 
-def index(request):
-    #Next 3 lines , original code from the tutorial
-    #latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    #output = ', '.join([q.question_text for q in latest_question_list])
-    #return HttpResponse(output)
+class IndexView(generic.ListView):
+    template_name = 'polls/index.html'
+    #This is the variable name which will be used to load the value (the query set obtained)
+    #Which means in python , it is possible to run another code ??
+    context_object_name = 'latest_question_list'
+    #Query set (Iterable)
+    def get_queryset(self):
+        return Question.objects.order_by('pub_date')
 
-    question_list = Question.objects.order_by('pub_date')
-    #if there is no  template then use this rendering logic , where everything is defined in the code
-    #output = ', '.join(q.question_text for q in question_list)
-    #print("The value for output is %s" %output)
-    #return HttpResponse(output)
-    context = {'latest_question_list' : question_list}
-    return render(request,'polls/index.html',context)
+class DetailsView(generic.DetailView):
+    model = Question
+    template_name  = 'polls/question_detail.html'
 
+'''
+# For future reference , in case you wan to know the basics related to 'Function views' instead of 'Class Views'
 def details(request,question_id):
     #return HttpResponse("(Under Implementation)Hello thanks for asking about a question ,this is the question id you asked for %s" % question_id)
     try:
@@ -33,11 +35,20 @@ def details(request,question_id):
     #context is the one which connects 'question' in view to the 'question' in template
     context = {'question' : question}
     return render(request,'polls/question_detail.html', context)
-
+'''
+#'''
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/result.html'
+#'''
+#
+'''
 def results(request,question_id):
     question=get_object_or_404(Question , pk=question_id)
     context = { 'question' : question }
     return render(request , 'polls/result.html', context)
+#
+'''    
 
 def vote(request,question_id):
     #return HttpResponse("(Under implementation ) You are looking at the no of votes for the question no :  %s" % question_id)
