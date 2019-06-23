@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404, render
 from django.utils.html import escape
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
+#from django.utils import datetime
 
 class IndexView(generic.ListView):
     template_name = 'polls/index.html'
@@ -16,8 +18,12 @@ class IndexView(generic.ListView):
     #Which means in python , it is possible to run another code ??
     context_object_name = 'latest_question_list'
     #Query set (Iterable)
+    #Using filters on queryset
+    #https://docs.djangoproject.com/en/2.1/topics/db/queries/#retrieving-specific-objects-with-filters
     def get_queryset(self):
-        return Question.objects.order_by('pub_date')
+        return Question.objects.filter(pub_date__lte=timezone.now())
+        #return Question.objects.filter(pub_date__lte=datetime.date.today())
+        #.order_by('pub_date')
 
 class DetailsView(generic.DetailView):
     model = Question
