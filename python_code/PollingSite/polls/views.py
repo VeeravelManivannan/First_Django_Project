@@ -21,7 +21,7 @@ class IndexView(generic.ListView):
     #Using filters on queryset
     #https://docs.djangoproject.com/en/2.1/topics/db/queries/#retrieving-specific-objects-with-filters
     def get_queryset(self):
-        return Question.objects.filter(pub_date__lte=timezone.now())
+        return Question.objects.filter(pub_date__lte=timezone.now()).order_by('pub_date')
         #return Question.objects.filter(pub_date__lte=datetime.date.today())
         #.order_by('pub_date')
 
