@@ -7,11 +7,26 @@ from .models import Question,Choice
 class ChoiceInLine(admin.TabularInline):
     model = Choice
 
+#Decorator for model.was_published_recently
+def decorateWasPublishedRecently(obj):
+    return obj.was_published_recently()
+decorateWasPublishedRecently.short_description = 'PUBLISHED RECENTLY ?'
+
 
 #Modeladmins
 class QuestionAdmin(admin.ModelAdmin):
-    fields = ('pub_date','question_text')
+
+    #PS 'fields' expects a list of strings
+    #fields = ('pub_date','question_text')
+
+    #Listdisplay (ModelAdmin.list_display) expects either string or function as arguements 
+    list_display = ('pub_date','question_text', decorateWasPublishedRecently )
+    list_filter = ['pub_date']
+    search_fields = ['question_text']
     inlines = [ChoiceInLine]
+
+ 
+
 
 
 admin.site.register(Question,QuestionAdmin)    
