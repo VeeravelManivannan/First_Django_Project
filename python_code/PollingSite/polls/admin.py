@@ -28,7 +28,8 @@ class QuestionAdmin(admin.ModelAdmin):
  
 
 
-
+admin.site.site_header = 'Custom Django Header'
+admin.site.site_tite = 'Custom Site Title'
 admin.site.register(Question,QuestionAdmin)    
 
 #admin.site.register(Choice)
